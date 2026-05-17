@@ -2,6 +2,8 @@
 
 API REST do sistema de blog desenvolvido como case técnico da Mind Group.
 
+Repositório do frontend: [https://github.com/Eduardo-Taveira/mind-blog-frontend](https://github.com/Eduardo-Taveira/mind-blog-frontend)
+
 ---
 
 ## Stack
@@ -19,19 +21,28 @@ API REST do sistema de blog desenvolvido como case técnico da Mind Group.
 
 ## Pré-requisitos do ambiente
 
-- Node.js 18+
-- npm
-- MySQL 8+
+Instale antes de começar:
+
+- [Node.js 18+](https://nodejs.org) — baixe a versão LTS
+- [MySQL 8+](https://dev.mysql.com/downloads/mysql/)
+- [Git](https://git-scm.com)
+
+> ⚠️ **Windows:** após instalar o MySQL, adicione o caminho do executável ao PATH do sistema.
+> O caminho padrão é `C:\Program Files\MySQL\MySQL Server 8.0\bin`.
+> Para adicionar: Painel de Controle → Variáveis de Ambiente → Path → Novo → cole o caminho acima → OK.
+> Feche e reabra o terminal após salvar.
 
 ---
 
 ## Instalação
 
 ```bash
-git clone <URL-DESTE-REPOSITÓRIO>
-cd blog-backend
+git clone https://github.com/Eduardo-Taveira/mind-blog-backend
+cd mind-blog-backend
 npm install
 ```
+
+> ⚠️ **Atenção:** a pasta criada pelo clone se chama `mind-blog-backend`, não `blog-backend`.
 
 ---
 
@@ -39,43 +50,61 @@ npm install
 
 > ⚠️ **Passo crítico — faça isso antes de subir o servidor.**
 
-**1. Crie o banco de dados:**
+### 1. Crie o banco de dados
 
 ```bash
-mysql -u root -p
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS blog_db;"
 ```
 
-```sql
-CREATE DATABASE blog_db;
-EXIT;
-```
+Digite sua senha do MySQL quando solicitado.
 
-**2. Importe o dump:**
+### 2. Importe o dump
 
+**Linux / macOS:**
 ```bash
 mysql -u root -p blog_db < dump.sql
 ```
 
-O arquivo `dump.sql` já está na raiz do repositório e inclui o schema completo das tabelas (`users`, `articles`, `comments`) com dados de exemplo.
+**Windows (PowerShell):**
+```powershell
+Get-Content dump.sql | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p blog_db
+```
 
-**3. Configure as variáveis de ambiente:**
+> O arquivo `dump.sql` já está na raiz do repositório e inclui o schema completo das tabelas (`users`, `articles`, `comments`) com dados de exemplo.
 
+---
+
+## Configuração das variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+**Linux / macOS:**
 ```bash
 cp .env.example .env
 ```
 
-Edite o `.env` com os seus valores:
+**Windows (PowerShell):**
+```powershell
+New-Item .env
+```
+
+Ou abra o VS Code e crie o arquivo manualmente:
+```bash
+code .env
+```
+
+Preencha o `.env` com seus dados:
 
 ```env
 PORT=3000
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=sua_senha
+DB_PASSWORD=sua_senha_do_mysql
 DB_NAME=blog_db
 JWT_SECRET=alguma_chave_secreta
 ```
 
-> ⚠️ **Nunca commite o `.env` real.** Ele está no `.gitignore`. Apenas o `.env.example` vai para o repositório.
+> ⚠️ **Nunca commite o `.env` real.** Ele está no `.gitignore`.
 
 ---
 
@@ -88,6 +117,11 @@ npm run dev
 ```
 
 A API ficará disponível em `http://localhost:3000/api`.
+
+Você verá uma mensagem como:
+```
+Server running on port 3000
+```
 
 **Build para produção:**
 
@@ -188,11 +222,3 @@ src/
 ├── routes/       # Definição das rotas por recurso
 └── services/     # Lógica de negócio (register, login com bcrypt/JWT)
 ```
-
----
-
-## Frontend
-
-O frontend deste projeto está em um repositório separado e consome esta API em `http://localhost:3000/api`.
-
-Repositório do frontend: [REPO-FRONTEND-URL]
